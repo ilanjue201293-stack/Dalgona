@@ -1,96 +1,111 @@
 <!doctype html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <meta name="theme-color" content="#8f7048" />
-  <title>Dalgona — Ink Game Practice</title>
-  <link rel="stylesheet" href="/style.css" />
+  <meta name="theme-color" content="#07090f" />
+  <title>VANTA — Sniper Collection</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <main id="app">
-    <section id="game" aria-label="Dalgona game">
-      <div id="camera">
-        <canvas id="cookieCanvas"></canvas>
-        <canvas id="traceCanvas"></canvas>
-        <canvas id="crackCanvas"></canvas>
-      </div>
-      <div id="needle" aria-hidden="true"><span class="eye"></span><span class="shaft"></span><span class="tip"></span></div>
-      <div id="screenTint"></div>
+  <canvas id="particles" aria-hidden="true"></canvas>
+  <div class="bg-orb orb-a"></div><div class="bg-orb orb-b"></div>
 
-      <div id="hud">
-        <div id="timer">2:00</div>
-        <div id="cookieName">TRIANGLE</div>
+  <main class="shell">
+    <header class="topbar">
+      <button class="brand" data-tab="open" aria-label="Accueil VANTA">
+        <span class="brand-mark"><i></i><i></i></span>
+        <span><b>VANTA</b><small>SNIPER COLLECTION</small></span>
+      </button>
+      <nav class="tabs" aria-label="Navigation principale">
+        <button class="tab active" data-tab="open">OPEN</button>
+        <button class="tab" data-tab="inventory">INVENTORY <span id="invCount">0</span></button>
+        <button class="tab" data-tab="loadout">LOADOUT</button>
+      </nav>
+      <div class="profile-chip"><span class="online"></span><b>COLLECTOR</b><small>LOCAL SAVE</small></div>
+    </header>
 
-        <div id="fearHud">
-          <div class="fearHeader"><span>FEAR</span><span id="fearPct">0%</span></div>
-          <div class="fearTrack"><div id="fearFill"></div></div>
-        </div>
-
-        <div id="crackPips" aria-label="Cookie cracks"></div>
-
-        <div id="progressHud">
-          <div class="progressIcon"><span></span></div>
-          <div class="progressTrack"><div id="progressFill"></div></div>
-          <div id="progressPct">0%</div>
-        </div>
-
-        <button id="breatheBtn" type="button">HOLD <b>SPACE</b> · BREATHE</button>
-        <div id="qte" aria-hidden="true">
-          <div class="qteTarget"></div>
-          <div class="qteRing"></div>
-          <strong id="qteKey">Q</strong>
-        </div>
-        <div id="toast"></div>
-      </div>
-
-      <div id="startScreen" class="overlay show">
-        <div class="panel">
-          <div class="kicker">INK GAME · DALGONA REWORK PRACTICE</div>
-          <h1>DALGONA</h1>
-          <p>Hold click and trace the stamped groove with the needle. The needle tip is the exact hit point.</p>
-          <div class="settings">
-            <label>COOKIE
-              <select id="cookieSelect">
-                <option value="random">Random (18)</option>
-                <option>Triangle</option><option>Circle</option><option>Star</option><option>Umbrella</option>
-                <option>Sackboy</option><option>Mona Lisa</option><option>Pig</option><option>Adjute</option>
-                <option>Blahaj</option><option>Fusion</option><option>Peabert</option><option>Rogue Lineage</option>
-                <option>Troll Face</option><option>Silly & Locked-In</option><option>67</option>
-                <option>I GOT A SQUID</option><option>Squid</option><option>Mona Lisa Figure</option>
-              </select>
-            </label>
-            <label class="check"><input id="hardcore" type="checkbox" /> HARDCORE</label>
-            <label class="check"><input id="nearby" type="checkbox" checked /> NEARBY ELIMINATIONS</label>
+    <section class="view active" id="view-open">
+      <div class="hero-grid">
+        <section class="weapon-stage glass-panel">
+          <div class="stage-topline">
+            <div><span class="eyebrow">CURRENT BUILD</span><h1 id="equippedName">BASE // APEX-50</h1></div>
+            <span class="rarity-pill" id="equippedRarity">STANDARD</span>
           </div>
-          <button id="playBtn" class="primary" type="button">PLAY</button>
-        </div>
-      </div>
-
-      <div id="revealScreen" class="overlay">
-        <div class="tin" id="tin">
-          <div class="tinBack"></div><div class="tinCookie"></div><div class="tinLid"></div>
-          <div id="revealName">TRIANGLE</div>
-        </div>
-      </div>
-
-      <div id="endScreen" class="overlay">
-        <div class="panel resultPanel">
-          <div id="resultKicker" class="kicker">ROUND COMPLETE</div>
-          <h2 id="resultTitle">SUCCESS</h2>
-          <p id="resultMessage"></p>
-          <div class="stats">
-            <div><b id="statTime">0:00</b><span>TIME</span></div>
-            <div><b id="statCracks">0/5</b><span>CRACKS</span></div>
-            <div><b id="statFear">0%</b><span>MAX FEAR</span></div>
+          <div class="weapon-wrap" id="weaponWrap">
+            <div class="scanline"></div>
+            <div class="weapon-glow"></div>
+            <div id="weaponArt" class="weapon-art"></div>
+            <div id="charmArt" class="charm-art"></div>
           </div>
-          <button id="againBtn" class="primary" type="button">PLAY AGAIN</button>
-          <button id="menuBtn" class="secondary" type="button">MENU</button>
-        </div>
+          <div class="stage-footer">
+            <div class="loadout-mini"><span>SKIN</span><b id="miniSkin">APEX-50</b></div>
+            <div class="loadout-mini"><span>FINISH</span><b id="miniFinish">MATTE</b></div>
+            <div class="loadout-mini"><span>CHARM</span><b id="miniCharm">NONE</b></div>
+          </div>
+        </section>
+
+        <aside class="case-panel glass-panel">
+          <div class="case-heading">
+            <span class="eyebrow">CASE TERMINAL</span>
+            <h2>CHOOSE A DROP</h2>
+            <p>L'économie arrive plus tard. Pour la V1, les ouvertures sont gratuites afin de tester le feeling.</p>
+          </div>
+          <div class="case-list" id="caseList"></div>
+          <button id="openCaseBtn" class="primary-cta"><span>OPEN</span><b id="openCaseName">SKIN CASE</b><i>→</i></button>
+          <div class="odds-line"><span>COMMON 50%</span><span>RARE 27%</span><span>EPIC 14%</span><span>LEGENDARY 6.5%</span><span>MYTHIC 2%</span><span>SECRET .5%</span></div>
+        </aside>
       </div>
-      <div id="flash"></div>
+
+      <section class="featured glass-panel">
+        <div class="section-title"><div><span class="eyebrow">INITIAL COLLECTION</span><h2>FEATURED SKINS</h2></div><button class="text-btn" data-tab="inventory">VIEW COLLECTION →</button></div>
+        <div class="skin-strip" id="skinStrip"></div>
+      </section>
+    </section>
+
+    <section class="view" id="view-inventory">
+      <div class="section-title inventory-title"><div><span class="eyebrow">YOUR VAULT</span><h2>INVENTORY</h2></div><div class="filter-row" id="filterRow"><button class="filter active" data-filter="all">ALL</button><button class="filter" data-filter="skin">SKINS</button><button class="filter" data-filter="finish">FINISHES</button><button class="filter" data-filter="charm">CHARMS</button></div></div>
+      <div class="inventory-grid" id="inventoryGrid"></div>
+      <div class="empty-state" id="emptyInventory"><b>VAULT EMPTY</b><span>Open a case to start your collection.</span><button class="secondary-cta" data-tab="open">OPEN A CASE</button></div>
+    </section>
+
+    <section class="view" id="view-loadout">
+      <div class="loadout-layout">
+        <section class="weapon-stage glass-panel tall">
+          <div class="stage-topline"><div><span class="eyebrow">LIVE PREVIEW</span><h1 id="loadoutTitle">APEX-50</h1></div><button id="resetLoadout" class="text-btn">RESET</button></div>
+          <div class="weapon-wrap big"><div class="scanline"></div><div class="weapon-glow"></div><div id="loadoutWeaponArt" class="weapon-art"></div><div id="loadoutCharmArt" class="charm-art"></div></div>
+        </section>
+        <aside class="loadout-slots glass-panel">
+          <span class="eyebrow">EQUIPPED</span><h2>BUILD</h2>
+          <div class="slot" data-slot="skin"><span>01</span><div><small>SKIN</small><b id="slotSkin">APEX-50</b></div><i>CHANGE</i></div>
+          <div class="slot" data-slot="finish"><span>02</span><div><small>FINISH</small><b id="slotFinish">MATTE</b></div><i>CHANGE</i></div>
+          <div class="slot" data-slot="charm"><span>03</span><div><small>CHARM</small><b id="slotCharm">NONE</b></div><i>CHANGE</i></div>
+          <p class="slot-note">Les finishes modifient le matériau du skin. Les charms restent indépendants du corps de l'arme.</p>
+        </aside>
+      </div>
+      <section class="picker glass-panel"><div class="section-title"><div><span class="eyebrow" id="pickerEyebrow">SELECT SKIN</span><h2 id="pickerTitle">OWNED SKINS</h2></div></div><div class="picker-grid" id="pickerGrid"></div></section>
     </section>
   </main>
-  <script src="/script.js"></script>
+
+  <div class="case-modal" id="caseModal" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="opening-shell">
+      <button id="closeModal" class="close-modal" aria-label="Fermer">×</button>
+      <span class="eyebrow" id="modalEyebrow">SKIN CASE</span>
+      <h2 id="modalTitle">OPENING...</h2>
+      <div class="roulette-window">
+        <div class="center-marker"></div>
+        <div class="roulette-track" id="rouletteTrack"></div>
+      </div>
+      <div class="drop-reveal" id="dropReveal">
+        <div class="drop-sparks"></div>
+        <div class="drop-art" id="dropArt"></div>
+        <div class="drop-copy"><span id="dropRarity">MYTHIC</span><h3 id="dropName">KEYFRAME</h3><p id="dropType">SKIN</p></div>
+        <div class="reveal-actions"><button id="equipDrop" class="secondary-cta">EQUIP</button><button id="keepDrop" class="primary-cta compact"><span>KEEP</span><b>IN VAULT</b></button></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
