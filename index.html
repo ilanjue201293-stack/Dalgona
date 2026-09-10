@@ -7,8 +7,9 @@
   <title>ROLL// — Title Collection</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Audiowide&family=Bebas+Neue&family=Black+Ops+One&family=Bungee&family=Chakra+Petch:wght@400;600;700&family=Cinzel:wght@500;700;900&family=Exo+2:wght@400;600;800&family=Michroma&family=Monoton&family=Orbitron:wght@400;600;800;900&family=Oxanium:wght@400;600;800&family=Permanent+Marker&family=Press+Start+2P&family=Rajdhani:wght@400;600;700&family=Righteous&family=Russo+One&family=Space+Grotesk:wght@400;600;700&family=Syne:wght@400;600;800&family=Teko:wght@400;600;700&family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Anton&family=Archivo+Black&family=Audiowide&family=Bangers&family=Bebas+Neue&family=Black+Ops+One&family=Bowlby+One+SC&family=Bungee&family=Chakra+Petch:wght@400;600;700&family=Cinzel:wght@500;700;900&family=Creepster&family=Exo+2:wght@400;600;800&family=Fredoka:wght@400;600;700&family=Graduate&family=Iceberg&family=Jura:wght@400;600;700&family=Kanit:wght@400;600;800&family=Krona+One&family=Limelight&family=Major+Mono+Display&family=Metal+Mania&family=Michroma&family=Monoton&family=Notable&family=Orbitron:wght@400;600;800;900&family=Oxanium:wght@400;600;800&family=Permanent+Marker&family=Poiret+One&family=Press+Start+2P&family=Quantico:wght@400;700&family=Rajdhani:wght@400;600;700&family=Righteous&family=Rubik+Mono+One&family=Russo+One&family=Share+Tech+Mono&family=Space+Grotesk:wght@400;600;700&family=Special+Elite&family=Syne:wght@400;600;800&family=Syncopate:wght@400;700&family=Teko:wght@400;600;700&family=Tilt+Neon&family=Tomorrow:wght@400;600;800&family=Unbounded:wght@400;600;800&family=Wallpoet&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="v3.css">
 </head>
 <body>
   <canvas id="particles" aria-hidden="true"></canvas>
@@ -21,6 +22,12 @@
       <button class="tab" data-view="inventory">INVENTORY <em id="invCount">0</em></button>
       <button class="tab" data-view="collection">CATALOG</button>
     </nav>
+    <div class="wallet" title="You earn 300 coins every minute">
+      <span class="coin-mark">◈</span>
+      <div><b id="coinBalance">1,000</b><small>COINS</small></div>
+      <i>+300 IN <strong id="incomeTimer">60s</strong></i>
+    </div>
+    <button class="admin-open" id="adminOpen">ADMIN</button>
     <div class="top-stats">
       <span><b id="rollCount">0</b> ROLLS</span>
       <span><b id="uniqueCount">0</b> UNIQUE</span>
@@ -43,17 +50,17 @@
         <button class="case-card selected" data-case="title">
           <div class="case-icon title-icon">Aa</div>
           <div class="case-copy"><span>PRIMARY CASE</span><h2>TITLE</h2><p>Hundreds of titles. Every title has its own odds.</p></div>
-          <div class="case-foot"><b id="titlePoolCount">0</b><span>TITLES</span></div>
+          <div class="case-foot"><b id="titlePoolCount">0</b><span>TITLES</span><em>◈ 250</em></div>
         </button>
         <button class="case-card" data-case="color">
           <div class="case-icon color-icon"><i></i></div>
           <div class="case-copy"><span>SECONDARY CASE</span><h2>COLOR</h2><p>Solid colors to animated gradients and effects.</p></div>
-          <div class="case-foot"><b id="colorPoolCount">0</b><span>COLORS</span></div>
+          <div class="case-foot"><b id="colorPoolCount">0</b><span>COLORS</span><em>◈ 250</em></div>
         </button>
         <button class="case-card" data-case="font">
           <div class="case-icon font-icon">Ff</div>
           <div class="case-copy"><span>STYLE CASE</span><h2>FONT</h2><p>Clean typefaces to rare display fonts.</p></div>
-          <div class="case-foot"><b id="fontPoolCount">0</b><span>FONTS</span></div>
+          <div class="case-foot"><b id="fontPoolCount">0</b><span>FONTS</span><em>◈ 250</em></div>
         </button>
       </section>
 
@@ -73,9 +80,10 @@
           <div class="result-odds" id="resultOdds">—</div>
         </div>
         <div class="machine-actions">
-          <button id="rollBtn" class="roll-btn"><span>ROLL</span><small>FREE · TEST MODE</small></button>
-          <button id="autoBtn" class="auto-btn"><span>AUTO ×10</span><small>LOW ATTENTION</small></button>
+          <button id="rollBtn" class="roll-btn"><span>ROLL</span><small>◈ 250 COINS</small></button>
+          <button id="autoBtn" class="auto-btn"><span>AUTO ×10</span><small>UP TO ◈ 2,500</small></button>
         </div>
+        <div class="economy-note"><span>◈ +300 every minute</span><span>Duplicates are converted into coins based on rarity</span></div>
       </section>
 
       <section class="history panel">
@@ -85,12 +93,15 @@
     </section>
 
     <section class="view" id="inventoryView">
-      <div class="page-head">
+      <div class="page-head inventory-head">
         <div><div class="eyebrow">YOUR DROPS</div><h1>INVENTORY</h1><p>Equip one title, one color and one font to build your display.</p></div>
-        <div class="inventory-tools">
-          <div class="segmented" id="invTabs"><button class="active" data-filter="all">ALL</button><button data-filter="title">TITLES</button><button data-filter="color">COLORS</button><button data-filter="font">FONTS</button></div>
-          <input id="invSearch" type="search" placeholder="Search inventory…" autocomplete="off">
-        </div>
+        <input id="invSearch" class="inventory-search" type="search" placeholder="Search inventory…" autocomplete="off">
+      </div>
+      <div class="inventory-tabs" id="invTabs">
+        <button class="active" data-filter="all"><i>◆</i><span>ALL</span><b id="invAllCount">0</b></button>
+        <button data-filter="title"><i>Aa</i><span>TITLES</span><b id="invTitleCount">0</b></button>
+        <button data-filter="color"><i class="mini-spectrum"></i><span>COLORS</span><b id="invColorCount">0</b></button>
+        <button data-filter="font"><i>Ff</i><span>FONTS</span><b id="invFontCount">0</b></button>
       </div>
       <div id="inventoryGrid" class="inventory-grid"></div>
     </section>
@@ -115,7 +126,21 @@
   <dialog id="oddsDialog">
     <div class="modal-head"><div><div class="eyebrow">DROP TABLE</div><h2 id="oddsTitle">TITLE CASE ODDS</h2></div><button id="closeOdds" aria-label="Close">×</button></div>
     <div id="oddsRarities" class="odds-rarities"></div>
-    <p class="odds-note">The case first rolls a rarity, then an item inside that rarity. Items also have slightly different individual weights, so two items of the same rarity can have different exact odds.</p>
+    <div id="duplicateRewards" class="duplicate-table"></div>
+    <p class="odds-note">The case first rolls a rarity, then an item inside that rarity. Items inside a rarity also have individual weights, so their exact chances can differ.</p>
+  </dialog>
+
+  <dialog id="adminDialog" class="admin-dialog">
+    <div class="modal-head"><div><div class="eyebrow">ENV PROTECTED</div><h2>ADMIN GRANT</h2></div><button id="adminClose" aria-label="Close">×</button></div>
+    <p class="admin-help">Enter the code stored in Vercel as <code>ADMIN_CODE</code>, then grant yourself exactly what you want.</p>
+    <label class="admin-field"><span>ADMIN CODE</span><input id="adminCode" type="password" autocomplete="off" placeholder="••••••••"></label>
+    <div class="admin-grid">
+      <label class="admin-field"><span>GRANT</span><select id="adminGrantType"><option value="coins">Coins</option><option value="title">A title</option><option value="color">A color</option><option value="font">A font</option><option value="all">Everything</option></select></label>
+      <label class="admin-field" id="adminAmountWrap"><span>AMOUNT</span><input id="adminAmount" type="number" value="10000" min="1" max="1000000000"></label>
+    </div>
+    <label class="admin-field hidden" id="adminItemWrap"><span>ITEM</span><select id="adminItem"></select></label>
+    <button id="adminGrant" class="admin-grant">GRANT</button>
+    <div id="adminStatus" class="admin-status"></div>
   </dialog>
 
   <div id="toast" role="status" aria-live="polite"></div>
