@@ -6,6 +6,7 @@ const RS=['Common','Uncommon','Rare','Epic','Legendary','Mythic','Secret'];
 const RC={Common:'#aeb7c4',Uncommon:'#62d894',Rare:'#58a9ff',Epic:'#aa72ff',Legendary:'#ffb34e',Mythic:'#ff5c9e',Secret:'#effdff'};
 const SH={title:[45,25,14,8,4.5,2.5,1],color:[48,25,13,7,4,2,1],font:[40,25,15,9,6,3.5,1.5]};
 const DUP=[50,80,125,225,400,750,1500];
+const COMBO_BONUS=[0,25,50,100,175,275,450];
 const H=s=>{let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0};
 const M=(type,name,rarity,x={})=>({id:type[0]+'_'+H(type+name).toString(36),type,name,rarity,weight:.75+(H(name)%50)/100,...x});
 
@@ -156,6 +157,10 @@ function paint(e,x,text=x.name){
     if(x.solid)e.style.color=x.solid;
   }else if(x.type==='font')font(e,x);
 }
+function paintRoll(e,x,text=x.name){
+  paint(e,x,text);
+  if(x.type!=='color')e.style.color=RC[x.rarity]||'#fff';
+}
 function toast(m){
   const e=$('#toast'); if(!e)return;
   e.textContent=m; e.classList.add('show');
@@ -205,25 +210,44 @@ function stats(){
   if($('#barColors'))$('#barColors').style.width=b/colors.length*100+'%';
   if($('#barFonts'))$('#barFonts').style.width=c/fonts.length*100+'%';
 }
+function comboIncome(){
+  let total=INCOME;
+  for(const t of ['title','color','font']){
+    const x=get(t,s.equipped[t])||defs[t];
+    total+=COMBO_BONUS[Math.max(0,RS.indexOf(x.rarity))]||0;
+  }
+  return total;
+}
 function buttons(){
   const no=rolling||auto||s.coins<COST;
   if($('#rollBtn'))$('#rollBtn').disabled=no;
   if($('#autoBtn'))$('#autoBtn').disabled=no;
 }
 function wallet(){
+  const rate=comboIncome();
   if($('#coinBalance'))$('#coinBalance').textContent=Math.floor(s.coins).toLocaleString();
-  if($('#incomeTimer'))$('#incomeTimer').textContent=Math.max(0,Math.ceil((s.lastIncomeAt+MIN-Date.now())/1000))+'s';
+  const timer=Math.max(0,Math.ceil((s.lastIncomeAt+MIN-Date.now())/1000));
+  const oldTimer=$('#incomeTimer');
+  if(oldTimer){
+    const line=oldTimer.parentElement;
+    if(line)line.innerHTML=`+${rate.toLocaleString()} /MIN · IN <strong id="incomeTimer">${timer}s</strong>`;
+  }
+  const w=$('.wallet');if(w)w.title=`Your equipped combo currently earns ${rate.toLocaleString()} coins per minute`;
   buttons();
 }
 function income(show=false){
   const now=Date.now(),m=Math.floor(Math.max(0,now-s.lastIncomeAt)/MIN);
-  if(m){s.coins+=m*INCOME; s.lastIncomeAt+=m*MIN; save();if(show)toast(`+${(m*INCOME).toLocaleString()} coins`)}
+  if(m){
+    const rate=comboIncome(),gain=m*rate;
+    s.coins+=gain; s.lastIncomeAt+=m*MIN; save();
+    if(show)toast(`+${gain.toLocaleString()} coins · combo income`);
+  }
   wallet();
 }
 function equipped(){
   const t=get('title',s.equipped.title)||defs.title,c=get('color',s.equipped.color)||defs.color,f=get('font',s.equipped.font)||defs.font,e=$('#equippedTitle');
   paint(e,c,t.name); font(e,f);
-  $('#eqTitleName').textContent=t.name;$('#eqColorName').textContent=c.name.toUpperCase();$('#eqFontName').textContent=f.name.toUpperCase();font($('#eqFontName'),f);
+  $('#eqTitleName').textContent=t.name;$('#eqColorName').textContent=c.name.toUpperCase();$('#eqFontName').textContent=f.name.toUpperCase();font($('#eqFontName'),f);wallet();
 }
 
 function view(v){
@@ -241,7 +265,7 @@ function select(t){
 function row(x,c=false){
   const d=document.createElement('div');d.className='reel-item'+(c?' centerish':'');
   d.innerHTML=`<span class="rarity" style="color:${RC[x.rarity]}">${x.rarity.toUpperCase()}</span><span class="name"></span><span class="chance">${pct(x)}</span>`;
-  paint(d.querySelector('.name'),x);return d;
+  paintRoll(d.querySelector('.name'),x);return d;
 }
 function focusRow(tr,index){[...tr.children].forEach((e,i)=>e.classList.toggle('roll-focus',i===index))}
 function idle(){
@@ -290,7 +314,7 @@ async function roll(q=false){
   await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));await animateReel(tr,n,q?2200:5200);
   if(rollState?.raf)cancelAnimationFrame(rollState.raf);rollState=null;if(skip){skip.classList.remove('show');skip.textContent='SKIP ANIMATION'}
   focusRow(tr,n-1);tr.lastElementChild?.classList.add('winner-glow');
-  const d=add(x);$('#resultRarity').textContent=x.rarity.toUpperCase();$('#resultRarity').style.color=RC[x.rarity];paint($('#resultName'),x);$('#resultOdds').textContent=d.dup?`DUPLICATE +${d.refund} ◈`:`${pct(x)} · 1/${one(x).toLocaleString()}`;
+  const d=add(x);$('#resultRarity').textContent=x.rarity.toUpperCase();$('#resultRarity').style.color=RC[x.rarity];paintRoll($('#resultName'),x);$('#resultOdds').textContent=d.dup?`DUPLICATE +${d.refund} ◈`:`${pct(x)} · 1/${one(x).toLocaleString()}`;
   revealVfx(x);sfxReveal(x);if(d.dup)setTimeout(sfxDuplicate,180);setTimeout(()=>tr.lastElementChild?.classList.remove('winner-glow'),1450);rolling=false;buttons();return x;
 }
 function skipAnimation(){
@@ -299,13 +323,13 @@ function skipAnimation(){
 
 function history(){
   const g=$('#historyList');if(!g)return;g.innerHTML='';if(!s.history.length){g.innerHTML='<div class="empty-mini">No rolls yet.</div>';return}
-  s.history.slice(0,6).forEach(h=>{const x=get(h.type,h.id);if(!x)return;const d=document.createElement('div');d.className='history-item';d.innerHTML=`<small style="color:${RC[x.rarity]}">${x.rarity.toUpperCase()} · ${x.type.toUpperCase()}</small><b></b><em>${pct(x)}</em>${h.dup?`<span class="dup-refund">DUP +${h.refund} ◈</span>`:''}`;paint(d.querySelector('b'),x);g.appendChild(d)});
+  s.history.slice(0,6).forEach(h=>{const x=get(h.type,h.id);if(!x)return;const d=document.createElement('div');d.className='history-item';d.innerHTML=`<small style="color:${RC[x.rarity]}">${x.rarity.toUpperCase()} · ${x.type.toUpperCase()}</small><b></b><em>${pct(x)}</em>${h.dup?`<span class="dup-refund">DUP +${h.refund} ◈</span>`:''}`;paintRoll(d.querySelector('b'),x);g.appendChild(d)});
 }
 function card(x,inv=false,qty=0){
   const c=document.createElement('div'),owned=!!s.inventory[x.type][x.id];c.className=(inv?'inv-card':'col-card')+(inv?'':owned?' owned':' locked');
   c.innerHTML=`<div class="item-top"><span class="item-type">${x.type.toUpperCase()}</span><span class="item-rarity" style="color:${RC[x.rarity]}">${x.rarity.toUpperCase()}</span></div><div class="item-preview"></div><div class="item-name"></div><div class="item-sub">${pct(x)} · ~1 in ${one(x).toLocaleString()}</div>${inv?`<div class="item-actions"><button class="equip-btn">${s.equipped[x.type]===x.id?'EQUIPPED':'EQUIP'}</button><span class="qty">×${qty}</span></div>`:'<span class="owned-dot"></span>'}`;
   paint(c.querySelector('.item-preview'),x);c.querySelector('.item-name').textContent=x.name;if(x.type==='font')font(c.querySelector('.item-name'),x);
-  if(inv)c.querySelector('button').onclick=()=>{s.equipped[x.type]=x.id;save();equipped();inventory();toast(x.name+' equipped')};return c;
+  if(inv)c.querySelector('button').onclick=()=>{s.equipped[x.type]=x.id;save();equipped();inventory();toast(`${x.name} equipped · ${comboIncome().toLocaleString()}/min`)};return c;
 }
 function inventory(){
   const g=$('#inventoryGrid');if(!g)return;const q=($('#invSearch')?.value||'').toLowerCase();let a=[];
