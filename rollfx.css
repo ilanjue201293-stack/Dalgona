@@ -1,0 +1,150 @@
+/* ROLL V6 — reel focus, skip, reveal VFX */
+.reel-item{
+  border-radius:12px;
+  transition:opacity .12s ease,transform .12s ease,filter .12s ease,background .12s ease,box-shadow .12s ease;
+  position:relative;
+}
+.reel-item.roll-focus{
+  opacity:1!important;
+  transform:scale(1.045);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.075),rgba(255,255,255,.14),rgba(255,255,255,.075),transparent);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.16),0 0 28px rgba(255,255,255,.11);
+  filter:brightness(1.28);
+}
+.reel-item.roll-focus:before{
+  content:"";
+  position:absolute;
+  inset:7px 10%;
+  border-radius:9px;
+  pointer-events:none;
+  background:radial-gradient(ellipse at center,rgba(255,255,255,.18),transparent 67%);
+  animation:focusBreath .48s ease-in-out infinite alternate;
+}
+.reel-item.roll-focus .name{
+  text-shadow:0 0 8px rgba(255,255,255,.8),0 0 22px rgba(255,255,255,.34);
+}
+.reel-item.roll-focus .rarity,.reel-item.roll-focus .chance{
+  filter:brightness(1.5);
+}
+.reel-item.winner-glow{
+  animation:winnerGlow .72s ease-out 2;
+}
+@keyframes focusBreath{
+  from{opacity:.35;transform:scaleX(.94)}
+  to{opacity:1;transform:scaleX(1)}
+}
+@keyframes winnerGlow{
+  0%{box-shadow:0 0 0 rgba(255,255,255,0);filter:brightness(1)}
+  35%{box-shadow:inset 0 0 0 1px rgba(255,255,255,.72),0 0 42px rgba(255,255,255,.35);filter:brightness(1.7)}
+  100%{box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 0 18px rgba(255,255,255,.08);filter:brightness(1.18)}
+}
+
+.skip-roll{
+  position:absolute;
+  z-index:20;
+  right:14px;
+  bottom:13px;
+  height:36px;
+  padding:0 14px;
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:9px;
+  background:rgba(7,10,16,.83);
+  color:#dbe6f6;
+  font:800 8px "Orbitron",sans-serif;
+  letter-spacing:.09em;
+  cursor:pointer;
+  backdrop-filter:blur(10px);
+  opacity:0;
+  transform:translateY(7px);
+  pointer-events:none;
+  transition:opacity .18s ease,transform .18s ease,border-color .18s ease;
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
+}
+.skip-roll.show{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+.skip-roll:hover{border-color:rgba(99,238,255,.52);color:#fff}
+.skip-roll:disabled{opacity:.5;cursor:wait}
+
+.roll-vfx-layer{
+  position:absolute;
+  inset:0;
+  z-index:12;
+  pointer-events:none;
+  overflow:hidden;
+  border-radius:inherit;
+}
+.reveal-flash{
+  --rarity:#fff;
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.92) 0%,rgba(255,255,255,.28) 12%,transparent 48%);
+  mix-blend-mode:screen;
+  animation:revealFlash .7s ease-out forwards;
+}
+.reveal-ring{
+  --rarity:#fff;
+  position:absolute;
+  left:50%;top:50%;
+  width:40px;height:40px;
+  border:2px solid var(--rarity);
+  border-radius:50%;
+  box-shadow:0 0 22px var(--rarity),inset 0 0 18px var(--rarity);
+  transform:translate(-50%,-50%);
+  animation:revealRing .85s cubic-bezier(.08,.75,.12,1) forwards;
+}
+.reveal-particle{
+  --x:0px;--y:0px;--rarity:#fff;
+  position:absolute;
+  left:50%;top:50%;
+  width:5px;height:5px;
+  border-radius:50%;
+  background:var(--rarity);
+  box-shadow:0 0 9px var(--rarity);
+  transform:translate(-50%,-50%);
+  opacity:0;
+  animation:revealParticle .8s cubic-bezier(.06,.72,.12,1) forwards;
+}
+@keyframes revealFlash{
+  0%{opacity:0;transform:scale(.76)}
+  12%{opacity:1}
+  100%{opacity:0;transform:scale(1.25)}
+}
+@keyframes revealRing{
+  0%{opacity:1;transform:translate(-50%,-50%) scale(.25)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(8)}
+}
+@keyframes revealParticle{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.35)}
+  15%{opacity:1}
+  100%{opacity:0;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(.1)}
+}
+
+.result-strip.result-pop{
+  animation:resultPop .62s cubic-bezier(.12,.8,.18,1);
+}
+@keyframes resultPop{
+  0%{transform:scale(.98);filter:brightness(1)}
+  28%{transform:scale(1.015);filter:brightness(1.55);box-shadow:0 0 35px rgba(255,255,255,.13)}
+  100%{transform:scale(1);filter:brightness(1)}
+}
+body.reveal-kick .machine{
+  animation:machineKick .32s ease-out;
+}
+@keyframes machineKick{
+  0%{transform:translateY(0)}
+  30%{transform:translateY(-2px)}
+  55%{transform:translateY(1px)}
+  100%{transform:translateY(0)}
+}
+
+@media(max-width:650px){
+  .skip-roll{right:9px;bottom:9px;height:32px;padding:0 10px;font-size:7px}
+  .reel-item.roll-focus{transform:scale(1.025)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .reveal-flash,.reveal-ring,.reveal-particle,.reel-item.winner-glow,.result-strip.result-pop,body.reveal-kick .machine{animation-duration:.2s!important;animation-iteration-count:1!important}
+}
