@@ -1,22 +1,45 @@
 # ROLL// — Title Collection
 
-Static Vercel-ready web game built around three independent loot rolls:
+Vercel-ready web game built around three independent loot rolls:
 
 - **TITLE CASE** — 198 titles across seven rarities, with individual item odds.
-- **COLOR CASE** — simple solid colors through animated gradients/effects.
-- **FONT CASE** — multiple typefaces from clean to display/secret styles.
+- **COLOR CASE** — 65 colors, from simple solids to animated premium effects.
+- **FONT CASE** — 56 fonts/styles, each previewed using its actual typeface.
 
 The equipped display combines exactly one Title + one Color + one Font.
 
-## Current prototype
-- Free rolls / no economy yet
+## Economy
+- Every roll costs **250 coins**.
+- The player starts with **1,000 coins** on a fresh save.
+- Passive income: **+300 coins every minute**, including elapsed time while the site was closed.
+- Duplicate drops convert into coins:
+  - Common: +50
+  - Uncommon: +80
+  - Rare: +125
+  - Epic: +225
+  - Legendary: +400
+  - Mythic: +750
+  - Secret: +1,500
+
+## Admin
+The Admin panel verifies its code through `/api/admin` so the secret is not embedded in client JavaScript.
+
+Create this Vercel environment variable for Production, Preview and Development if desired:
+
+`ADMIN_CODE=your-secret-code`
+
+The Admin panel can grant coins, any individual title/color/font, or the full item collection.
+
+> The current inventory and coin balance are stored in browser `localStorage`, so this is suitable for a personal/local game prototype rather than a cheat-proof multiplayer economy.
+
+## Features
 - Single roll + Auto ×10
 - Exact per-item odds
-- Inventory with duplicate counts
+- Prominent inventory tabs for All / Titles / Colors / Fonts
+- Duplicate counts
 - Equip system
-- Full collection index
+- Full catalog
 - Recent drop history
 - Local browser save via `localStorage`
-- No database and no environment variables required
 
-Import the repository into Vercel as a static site. `index.html` is the entry point.
+Import the repository into Vercel. `index.html` is the main page and `api/admin.js` is the serverless admin verifier.
