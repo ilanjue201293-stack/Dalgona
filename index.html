@@ -19,7 +19,7 @@
     <nav class="tabs" aria-label="Main navigation">
       <button class="tab active" data-view="cases">CASES</button>
       <button class="tab" data-view="inventory">INVENTORY <em id="invCount">0</em></button>
-      <button class="tab" data-view="collection">COLLECTION</button>
+      <button class="tab" data-view="collection">CATALOG</button>
     </nav>
     <div class="top-stats">
       <span><b id="rollCount">0</b> ROLLS</span>
@@ -96,7 +96,7 @@
     </section>
 
     <section class="view" id="collectionView">
-      <div class="page-head"><div><div class="eyebrow">INDEX</div><h1>COLLECTION</h1><p>Everything currently obtainable, including exact drop chance.</p></div></div>
+      <div class="page-head"><div><div class="eyebrow">FULL DROP LIST</div><h1>CATALOG</h1><p>See every title, color and font in the game, even the ones you haven't rolled yet.</p></div></div>
       <div class="collection-summary">
         <div class="summary-card"><span>TITLES</span><b id="colTitles">0 / 0</b><i><u id="barTitles"></u></i></div>
         <div class="summary-card"><span>COLORS</span><b id="colColors">0 / 0</b><i><u id="barColors"></u></i></div>
@@ -104,9 +104,9 @@
       </div>
       <div class="rarity-legend" id="rarityLegend"></div>
       <div class="collection-controls">
-        <select id="collectionType"><option value="title">Titles</option><option value="color">Colors</option><option value="font">Fonts</option></select>
+        <select id="collectionType"><option value="all">All items</option><option value="title">Titles</option><option value="color">Colors</option><option value="font">Fonts</option></select>
         <select id="collectionRarity"><option value="all">All rarities</option></select>
-        <input id="collectionSearch" type="search" placeholder="Search collection…">
+        <input id="collectionSearch" type="search" placeholder="Search all drops…">
       </div>
       <div id="collectionGrid" class="collection-grid"></div>
     </section>
