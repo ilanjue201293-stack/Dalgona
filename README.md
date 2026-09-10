@@ -1,18 +1,22 @@
-# VANTA — Sniper Collection (V1)
+# ROLL// — Title Collection
 
-Static no-build prototype for a premium neon sniper loot-opening game.
+Static Vercel-ready web game built around three independent loot rolls:
 
-## Included
-- 3 cases: Skin / Finish / Charm
-- weighted rarity opening roulette
-- inventory saved locally in the browser
-- equippable Skin + Finish + Charm loadout
-- 8 initial collectible skin silhouettes plus the base APEX-50
-- Keyframe and Eventide are original fan-made designs inspired by the visual language of iconic RIVALS sniper skins, not extracted game assets
-- 6 finishes
-- 8 charms
-- responsive desktop/mobile UI
-- lightweight ambient particle field
+- **TITLE CASE** — 198 titles across seven rarities, with individual item odds.
+- **COLOR CASE** — simple solid colors through animated gradients/effects.
+- **FONT CASE** — multiple typefaces from clean to display/secret styles.
 
-## Deploy
-No build command or environment variables are needed. Deploy the folder as a static site on Vercel.
+The equipped display combines exactly one Title + one Color + one Font.
+
+## Current prototype
+- Free rolls / no economy yet
+- Single roll + Auto ×10
+- Exact per-item odds
+- Inventory with duplicate counts
+- Equip system
+- Full collection index
+- Recent drop history
+- Local browser save via `localStorage`
+- No database and no environment variables required
+
+Import the repository into Vercel as a static site. `index.html` is the entry point.
