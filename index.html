@@ -1,112 +1,124 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <meta name="theme-color" content="#07090f" />
-  <title>VANTA — Sniper Collection</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <meta name="theme-color" content="#07090f">
+  <title>ROLL// — Title Collection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Audiowide&family=Bebas+Neue&family=Black+Ops+One&family=Bungee&family=Chakra+Petch:wght@400;600;700&family=Cinzel:wght@500;700;900&family=Exo+2:wght@400;600;800&family=Michroma&family=Monoton&family=Orbitron:wght@400;600;800;900&family=Oxanium:wght@400;600;800&family=Permanent+Marker&family=Press+Start+2P&family=Rajdhani:wght@400;600;700&family=Righteous&family=Russo+One&family=Space+Grotesk:wght@400;600;700&family=Syne:wght@400;600;800&family=Teko:wght@400;600;700&family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <canvas id="particles" aria-hidden="true"></canvas>
-  <div class="bg-orb orb-a"></div><div class="bg-orb orb-b"></div>
+  <div class="noise" aria-hidden="true"></div>
 
-  <main class="shell">
-    <header class="topbar">
-      <button class="brand" data-tab="open" aria-label="Accueil VANTA">
-        <span class="brand-mark"><i></i><i></i></span>
-        <span><b>VANTA</b><small>SNIPER COLLECTION</small></span>
-      </button>
-      <nav class="tabs" aria-label="Navigation principale">
-        <button class="tab active" data-tab="open">OPEN</button>
-        <button class="tab" data-tab="inventory">INVENTORY <span id="invCount">0</span></button>
-        <button class="tab" data-tab="loadout">LOADOUT</button>
-      </nav>
-      <div class="profile-chip"><span class="online"></span><b>COLLECTOR</b><small>LOCAL SAVE</small></div>
-    </header>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="ROLL home"><span>ROLL</span><i>//</i></a>
+    <nav class="tabs" aria-label="Main navigation">
+      <button class="tab active" data-view="cases">CASES</button>
+      <button class="tab" data-view="inventory">INVENTORY <em id="invCount">0</em></button>
+      <button class="tab" data-view="collection">COLLECTION</button>
+    </nav>
+    <div class="top-stats">
+      <span><b id="rollCount">0</b> ROLLS</span>
+      <span><b id="uniqueCount">0</b> UNIQUE</span>
+    </div>
+  </header>
 
-    <section class="view active" id="view-open">
-      <div class="hero-grid">
-        <section class="weapon-stage glass-panel">
-          <div class="stage-topline">
-            <div><span class="eyebrow">CURRENT BUILD</span><h1 id="equippedName">BASE // APEX-50</h1></div>
-            <span class="rarity-pill" id="equippedRarity">STANDARD</span>
-          </div>
-          <div class="weapon-wrap" id="weaponWrap">
-            <div class="scanline"></div>
-            <div class="weapon-glow"></div>
-            <div id="weaponArt" class="weapon-art"></div>
-            <div id="charmArt" class="charm-art"></div>
-          </div>
-          <div class="stage-footer">
-            <div class="loadout-mini"><span>SKIN</span><b id="miniSkin">APEX-50</b></div>
-            <div class="loadout-mini"><span>FINISH</span><b id="miniFinish">MATTE</b></div>
-            <div class="loadout-mini"><span>CHARM</span><b id="miniCharm">NONE</b></div>
-          </div>
-        </section>
+  <main>
+    <section class="view active" id="casesView">
+      <section class="loadout-hero panel">
+        <div class="eyebrow">CURRENT LOADOUT</div>
+        <div id="equippedTitle" class="equipped-title">PLAYER</div>
+        <div class="loadout-meta">
+          <button class="load-chip" data-go="title"><span>TITLE</span><b id="eqTitleName">PLAYER</b></button>
+          <button class="load-chip" data-go="color"><span>COLOR</span><b id="eqColorName">WHITE</b></button>
+          <button class="load-chip" data-go="font"><span>FONT</span><b id="eqFontName">SPACE GROTESK</b></button>
+        </div>
+      </section>
 
-        <aside class="case-panel glass-panel">
-          <div class="case-heading">
-            <span class="eyebrow">CASE TERMINAL</span>
-            <h2>CHOOSE A DROP</h2>
-            <p>L'économie arrive plus tard. Pour la V1, les ouvertures sont gratuites afin de tester le feeling.</p>
-          </div>
-          <div class="case-list" id="caseList"></div>
-          <button id="openCaseBtn" class="primary-cta"><span>OPEN</span><b id="openCaseName">SKIN CASE</b><i>→</i></button>
-          <div class="odds-line"><span>COMMON 50%</span><span>RARE 27%</span><span>EPIC 14%</span><span>LEGENDARY 6.5%</span><span>MYTHIC 2%</span><span>SECRET .5%</span></div>
-        </aside>
-      </div>
+      <section class="case-picker" aria-label="Choose a case">
+        <button class="case-card selected" data-case="title">
+          <div class="case-icon title-icon">Aa</div>
+          <div class="case-copy"><span>PRIMARY CASE</span><h2>TITLE</h2><p>Hundreds of titles. Every title has its own odds.</p></div>
+          <div class="case-foot"><b id="titlePoolCount">0</b><span>TITLES</span></div>
+        </button>
+        <button class="case-card" data-case="color">
+          <div class="case-icon color-icon"><i></i></div>
+          <div class="case-copy"><span>SECONDARY CASE</span><h2>COLOR</h2><p>Solid colors to animated gradients and effects.</p></div>
+          <div class="case-foot"><b id="colorPoolCount">0</b><span>COLORS</span></div>
+        </button>
+        <button class="case-card" data-case="font">
+          <div class="case-icon font-icon">Ff</div>
+          <div class="case-copy"><span>STYLE CASE</span><h2>FONT</h2><p>Clean typefaces to rare display fonts.</p></div>
+          <div class="case-foot"><b id="fontPoolCount">0</b><span>FONTS</span></div>
+        </button>
+      </section>
 
-      <section class="featured glass-panel">
-        <div class="section-title"><div><span class="eyebrow">INITIAL COLLECTION</span><h2>FEATURED SKINS</h2></div><button class="text-btn" data-tab="inventory">VIEW COLLECTION →</button></div>
-        <div class="skin-strip" id="skinStrip"></div>
+      <section class="machine panel" id="machine">
+        <div class="machine-head">
+          <div><div class="eyebrow" id="machineEyebrow">TITLE CASE</div><h1 id="machineTitle">ROLL A TITLE</h1></div>
+          <button class="odds-btn" id="oddsBtn">VIEW ODDS</button>
+        </div>
+        <div class="reel-shell" id="reelShell">
+          <div class="center-line top"></div><div class="center-line bottom"></div>
+          <div class="reel-track" id="reelTrack"></div>
+          <div class="reel-marker left"></div><div class="reel-marker right"></div>
+        </div>
+        <div class="result-strip" id="resultStrip">
+          <div class="result-rarity" id="resultRarity">READY</div>
+          <div class="result-name" id="resultName">Press roll to start</div>
+          <div class="result-odds" id="resultOdds">—</div>
+        </div>
+        <div class="machine-actions">
+          <button id="rollBtn" class="roll-btn"><span>ROLL</span><small>FREE · TEST MODE</small></button>
+          <button id="autoBtn" class="auto-btn"><span>AUTO ×10</span><small>LOW ATTENTION</small></button>
+        </div>
+      </section>
+
+      <section class="history panel">
+        <div class="section-head"><div><div class="eyebrow">RECENT DROPS</div><h3>ROLL HISTORY</h3></div><button id="clearHistory">CLEAR</button></div>
+        <div id="historyList" class="history-list"><div class="empty-mini">No rolls yet.</div></div>
       </section>
     </section>
 
-    <section class="view" id="view-inventory">
-      <div class="section-title inventory-title"><div><span class="eyebrow">YOUR VAULT</span><h2>INVENTORY</h2></div><div class="filter-row" id="filterRow"><button class="filter active" data-filter="all">ALL</button><button class="filter" data-filter="skin">SKINS</button><button class="filter" data-filter="finish">FINISHES</button><button class="filter" data-filter="charm">CHARMS</button></div></div>
-      <div class="inventory-grid" id="inventoryGrid"></div>
-      <div class="empty-state" id="emptyInventory"><b>VAULT EMPTY</b><span>Open a case to start your collection.</span><button class="secondary-cta" data-tab="open">OPEN A CASE</button></div>
+    <section class="view" id="inventoryView">
+      <div class="page-head">
+        <div><div class="eyebrow">YOUR DROPS</div><h1>INVENTORY</h1><p>Equip one title, one color and one font to build your display.</p></div>
+        <div class="inventory-tools">
+          <div class="segmented" id="invTabs"><button class="active" data-filter="all">ALL</button><button data-filter="title">TITLES</button><button data-filter="color">COLORS</button><button data-filter="font">FONTS</button></div>
+          <input id="invSearch" type="search" placeholder="Search inventory…" autocomplete="off">
+        </div>
+      </div>
+      <div id="inventoryGrid" class="inventory-grid"></div>
     </section>
 
-    <section class="view" id="view-loadout">
-      <div class="loadout-layout">
-        <section class="weapon-stage glass-panel tall">
-          <div class="stage-topline"><div><span class="eyebrow">LIVE PREVIEW</span><h1 id="loadoutTitle">APEX-50</h1></div><button id="resetLoadout" class="text-btn">RESET</button></div>
-          <div class="weapon-wrap big"><div class="scanline"></div><div class="weapon-glow"></div><div id="loadoutWeaponArt" class="weapon-art"></div><div id="loadoutCharmArt" class="charm-art"></div></div>
-        </section>
-        <aside class="loadout-slots glass-panel">
-          <span class="eyebrow">EQUIPPED</span><h2>BUILD</h2>
-          <div class="slot" data-slot="skin"><span>01</span><div><small>SKIN</small><b id="slotSkin">APEX-50</b></div><i>CHANGE</i></div>
-          <div class="slot" data-slot="finish"><span>02</span><div><small>FINISH</small><b id="slotFinish">MATTE</b></div><i>CHANGE</i></div>
-          <div class="slot" data-slot="charm"><span>03</span><div><small>CHARM</small><b id="slotCharm">NONE</b></div><i>CHANGE</i></div>
-          <p class="slot-note">Les finishes modifient le matériau du skin. Les charms restent indépendants du corps de l'arme.</p>
-        </aside>
+    <section class="view" id="collectionView">
+      <div class="page-head"><div><div class="eyebrow">INDEX</div><h1>COLLECTION</h1><p>Everything currently obtainable, including exact drop chance.</p></div></div>
+      <div class="collection-summary">
+        <div class="summary-card"><span>TITLES</span><b id="colTitles">0 / 0</b><i><u id="barTitles"></u></i></div>
+        <div class="summary-card"><span>COLORS</span><b id="colColors">0 / 0</b><i><u id="barColors"></u></i></div>
+        <div class="summary-card"><span>FONTS</span><b id="colFonts">0 / 0</b><i><u id="barFonts"></u></i></div>
       </div>
-      <section class="picker glass-panel"><div class="section-title"><div><span class="eyebrow" id="pickerEyebrow">SELECT SKIN</span><h2 id="pickerTitle">OWNED SKINS</h2></div></div><div class="picker-grid" id="pickerGrid"></div></section>
+      <div class="rarity-legend" id="rarityLegend"></div>
+      <div class="collection-controls">
+        <select id="collectionType"><option value="title">Titles</option><option value="color">Colors</option><option value="font">Fonts</option></select>
+        <select id="collectionRarity"><option value="all">All rarities</option></select>
+        <input id="collectionSearch" type="search" placeholder="Search collection…">
+      </div>
+      <div id="collectionGrid" class="collection-grid"></div>
     </section>
   </main>
 
-  <div class="case-modal" id="caseModal" aria-hidden="true">
-    <div class="modal-backdrop"></div>
-    <div class="opening-shell">
-      <button id="closeModal" class="close-modal" aria-label="Fermer">×</button>
-      <span class="eyebrow" id="modalEyebrow">SKIN CASE</span>
-      <h2 id="modalTitle">OPENING...</h2>
-      <div class="roulette-window">
-        <div class="center-marker"></div>
-        <div class="roulette-track" id="rouletteTrack"></div>
-      </div>
-      <div class="drop-reveal" id="dropReveal">
-        <div class="drop-sparks"></div>
-        <div class="drop-art" id="dropArt"></div>
-        <div class="drop-copy"><span id="dropRarity">MYTHIC</span><h3 id="dropName">KEYFRAME</h3><p id="dropType">SKIN</p></div>
-        <div class="reveal-actions"><button id="equipDrop" class="secondary-cta">EQUIP</button><button id="keepDrop" class="primary-cta compact"><span>KEEP</span><b>IN VAULT</b></button></div>
-      </div>
-    </div>
-  </div>
+  <dialog id="oddsDialog">
+    <div class="modal-head"><div><div class="eyebrow">DROP TABLE</div><h2 id="oddsTitle">TITLE CASE ODDS</h2></div><button id="closeOdds" aria-label="Close">×</button></div>
+    <div id="oddsRarities" class="odds-rarities"></div>
+    <p class="odds-note">The case first rolls a rarity, then an item inside that rarity. Items also have slightly different individual weights, so two items of the same rarity can have different exact odds.</p>
+  </dialog>
 
+  <div id="toast" role="status" aria-live="polite"></div>
   <script src="script.js"></script>
-  <script src="v2.js"></script>
 </body>
 </html>
